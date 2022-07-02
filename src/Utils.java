@@ -1,15 +1,13 @@
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
-import java.util.Arrays;
-import java.util.List;
-
-import static java.lang.foreign.ValueLayout.*;
 
 public class Utils {
-//    public static final MethodHandle printfMH = create("printf",
-//            FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_DOUBLE));
-
-    public static MemorySegment lookup(String symbolName) {
+    /**
+     * Returns a native symbol (MemorySegment) from memory.
+     * @param symbolName
+     * @return MemorySegment Returns a Symbol in memory.
+     */
+    public final static MemorySegment lookup(String symbolName) {
         Linker linker = Linker.nativeLinker();
         return linker.defaultLookup()
                 .lookup(symbolName)
@@ -17,7 +15,13 @@ public class Utils {
                 .orElseThrow(() -> new RuntimeException("The symbol %s is not found".formatted(symbolName)));
     }
 
-    public static MethodHandle create(String symbolName, FunctionDescriptor functionDescriptor) {
+    /**
+     * Creates a Method Handle that will reference a native function.
+     * @param symbolName The native symbol name
+     * @param functionDescriptor FunctionDescriptor using Value and Memory layouts to describe call site of a C function.
+     * @return MethodHandle
+     */
+    public final static MethodHandle create(String symbolName, FunctionDescriptor functionDescriptor) {
         Linker linker = Linker.nativeLinker();
         return linker.downcallHandle(lookup(symbolName), functionDescriptor);
     }
