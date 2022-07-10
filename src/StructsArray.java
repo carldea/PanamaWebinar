@@ -15,6 +15,7 @@ public class StructsArray {
                int x;
                int y;
             };
+            struct points[5];
         */
         GroupLayout pointStruct = MemoryLayout.structLayout(
                 JAVA_INT.withName("x"),

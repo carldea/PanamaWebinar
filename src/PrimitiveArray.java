@@ -25,6 +25,17 @@ public class PrimitiveArray {
                System.out.printf(" %f ", cDoubleArray.getAtIndex(JAVA_DOUBLE, i ));
            }
            System.out.println();
+           System.out.println("An array of data (doubled)");
+           for (long i = 0; i < 16; i++) {
+               cDoubleArray.setAtIndex(JAVA_DOUBLE, i,cDoubleArray.getAtIndex(JAVA_DOUBLE, i ) * 2);
+           }
+           for (long i = 0; i < 16; i++) {
+               if (i>0 && i % 4 == 0) {
+                   System.out.println();
+               }
+               System.out.printf(" %f ", cDoubleArray.getAtIndex(JAVA_DOUBLE, i ));
+           }
+           System.out.println();
        }
     }
 }

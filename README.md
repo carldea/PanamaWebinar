@@ -21,6 +21,8 @@ export JAVA_HOME=<untarred_dir>/jdk-19
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
+**Note:** OpenJDK from https://jdk.java.net/19 the `JAVA_HOME` will be `<untarred_dir>/jdk-19/Contents/Home`. When obtained from vendors such as Azul the `JAVA_HOME` will be `<untarred_dir>/jdk-19` and other Linux/Unix OSes (convenient symlinks will exist).
+
 **Windows**
 ```
 set JAVA_HOME=<unzipped_dir>\jdk-19
@@ -35,68 +37,63 @@ Run Java to determine the version is 19 or later as shown below:
 $ java -version
 
 openjdk version "19-ea" 2022-09-20
-OpenJDK Runtime Environment Zulu19+59-CA (build 19-ea+25)
-OpenJDK 64-Bit Server VM Zulu19+59-CA (build 19-ea+25, mixed mode, sharing)
+OpenJDK Runtime Environment (build 19-ea+30-2169)
+OpenJDK 64-Bit Server VM (build 19-ea+30-2169, mixed mode)
+```
+# Compile jextracted binding code
+Because the `jextract` tool is a separate project and not required as part of the workshop (webinar) I generated the code and checked it into source control.
+
+As a convenience the generated Panama bindings is checked into source control, but you'll need to compile them to be used in the examples. 
+
+e.g. `printf()` from the C's `stdio.h` has been generated in `src/org/unix/` directory. When running an example you'll use the `-classpath classes` on the command line.
+
+The following is how to compile the panama's generated binding code:
+
+**Mac/Linux**
+```shell
+javac --enable-preview --source 19 -d classes src/org/unix/*.java
+```
+
+**Windows**
+```shell
+javac --enable-preview --source 19 -d classes src\org\unix\*.java
 ```
 
 # Getting Started
 A HelloWorld.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/HelloWorld.java
-```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/HelloWorld.java
-```
-
-Then,
-```sh
-> HelloWorld.main()
-
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/HelloWorld.java
 ```
 
 **Output:**
 ```sh
-Hello World! Panama Style!
+Note: src/HelloWorld.java uses preview features of Java SE 19.
+Note: Recompile with -Xlint:preview for details.
+Hello World! Panama style
+Convert to Java String: Hello World! Panama style
+
+(Addressable,Addressable,int)int
+Life, the Universe and Everything is 42 
+Millennium Falcon?…It's the ship that made the Kessel Run in less than 12 parsecs.
 ```
 
 # Working with Primitives
 A Primitive.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Primitive.java
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Primitive.java
 ```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/Primitive.java
-```
-
-Then,
-```sh
-> Primitive.main()
-
-```
-
 **Output:**
 ```sh
 Note: src/Primitive.java uses preview features of Java SE 19.
 Note: Recompile with -Xlint:preview for details.
 A slice of 3.141593 
+Math.PI * 2 = 6.283185
 ```
 
 # Working with Arrays of Primitives
 A PrimitiveArray.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/PrimitiveArray.java
-```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/PrimitiveArray.java
-```
-
-Then,
-```sh
-> PrimitiveArray.main()
-
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/PrimitiveArray.java
 ```
 
 **Output:**
@@ -113,17 +110,7 @@ An array of data
 # Working with C Pointers
 A Pointers.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Pointers.java
-```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/Pointers.java
-```
-
-Then,
-```sh
-> Pointers.main()
-
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Pointers.java
 ```
 
 **Output:**
@@ -142,17 +129,7 @@ Creating Pointers:
 # Working with C Structs
 A Structs.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Structs.java
-```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/Structs.java
-```
-
-Then,
-```sh
-> Structs.main()
-
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/Structs.java
 ```
 
 **Output:**
@@ -169,17 +146,7 @@ cPoint = (100, 200)
 # Working with an array of C Structs
 A StructsArray.java uses Java Panama's Foreign Function and Memory Access APIs to access C native functions. To run the example execute the following:
 ```sh
-java --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/StructsArray.java
-```
-Or in JShell
-```sh
-jshell --enable-native-access=ALL-UNNAMED --enable-preview src/StructsArray.java
-```
-
-Then,
-```sh
-> StructsArray.main()
-
+java -classpath classes --enable-native-access=ALL-UNNAMED --enable-preview --source 19 src/StructsArray.java
 ```
 
 **Output:**
