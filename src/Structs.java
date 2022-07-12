@@ -51,14 +51,13 @@ public class Structs {
         VarHandle VHid = personStruct.varHandle(MemoryLayout.PathElement.groupElement("id"));
         VarHandle VHname = personStruct.varHandle(MemoryLayout.PathElement.groupElement("name"));
 
-        VHid.set(cPerson, System.currentTimeMillis());
+        VHid.set(cPerson, 12345);
         VHname.set(cPerson, memorySession.allocateUtf8String("John Doe").address());
+
+        long id = (long) VHid.get(cPerson);
         MemoryAddress cNameTmp = (MemoryAddress) VHname.get(cPerson);
-        int len = cNameTmp.getUtf8String(0).length() + 1;
-        System.out.printf("cPerson = (%d, %s) \n",
-                VHid.get(cPerson),
-                MemorySegment.ofAddress(cNameTmp, len, memorySession)
-                             .getUtf8String(0));
+
+        System.out.printf("cPerson = (%d, %s) \n", id, cNameTmp.getUtf8String(0));
       }
     }
 }

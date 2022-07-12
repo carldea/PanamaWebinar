@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySession;
 import static org.unix.foo_h.*;
 
 /**
- * javac --module-path $PATH_TO_FX --add-modules=javafx.controls,javafx.web -d classes src/PanamaNativeTimeFX.java
+ * javac javac --module-path $PATH_TO_FX --add-modules=javafx.controls,javafx.web -classpath classes -d classes --enable-preview -source 19 src/PanamaNativeTimeFX.java
  * java --module-path $PATH_TO_FX --add-modules=javafx.controls,javafx.web -classpath classes PanamaNativeTimeFX
  */
 public class PanamaNativeTimeFX extends Application {
@@ -94,20 +94,20 @@ class SVGClock2 {
             var xmlns="http://www.w3.org/2000/svg"
             function updateTime(hr, min, sec)
             {
-              var pi=180
+              const pi=180
                         
-              var secondAngle = sec * 6 + pi
-              var minuteAngle = ( min + sec / 60 ) * 6 + pi
-              var hourAngle   = (hr + min / 60 + sec /3600) * 30 + pi
+              const secondAngle = sec * 6 + pi
+              const minuteAngle = ( min + sec / 60 ) * 6 + pi
+              const hourAngle   = (hr + min / 60 + sec /3600) * 30 + pi
                         
               moveHands(secondAngle, minuteAngle, hourAngle)
             }
                         
             function moveHands(secondAngle, minuteAngle, hourAngle) {
                         
-              var secondHand = document.getElementById("secondHand")
-              var minuteHand = document.getElementById("minuteHand")
-              var hourHand = document.getElementById("hourHand")
+              const secondHand = document.getElementById("secondHand")
+              const minuteHand = document.getElementById("minuteHand")
+              const hourHand = document.getElementById("hourHand")
                         
               secondHand.setAttribute("transform","rotate("+ secondAngle + ")")
               minuteHand.setAttribute("transform","rotate("+ minuteAngle +")")
