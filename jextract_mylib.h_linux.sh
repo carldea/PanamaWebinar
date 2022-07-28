@@ -1,16 +1,19 @@
 #!/bin/sh -x
-rm -rf classes/org/unix
-rm -rf src/org/unix
+rm -rf classes/org/mylib
+rm -rf src/org/mylib
 
 export C_INCLUDE_PATH=/usr/include
 
-# jextract stdio.h
+# jextract mylib.h
 jextract --source --output src \
-  -t org.unix \
+  -t org.mylib \
   -I $C_INCLUDE_PATH \
-  foo.h
+  -I . \
+  -l mylib \
+  mylib.h
 
 jextract --output classes \
-  -t org.unix \
+  -t org.mylib \
   -I $C_INCLUDE_PATH \
-  foo.h
+  -l mylib \
+  mylib.h

@@ -1,5 +1,5 @@
-rd classes /s
-rd src\org /s
+rd classes\org\unix /s
+rd src\org\unix /s
 
 REM Assumes MinGW is installed in the root path
 set C_INCLUDE_PATH=C:\MinGW\include

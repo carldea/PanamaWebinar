@@ -6,8 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import static java.time.temporal.ChronoField.*;
-
 /**
  * javac --module-path $PATH_TO_FX --add-modules=javafx.controls,javafx.web -d classes src/DisplayHtml5Content.java
  * java  --module-path $PATH_TO_FX --add-modules=javafx.controls,javafx.web -classpath classes DisplayHtml5Content

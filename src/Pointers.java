@@ -16,18 +16,19 @@ public class Pointers {
         var x = memorySession.allocate(JAVA_INT, 5);
 
         // int *ptr;
-        MemoryAddress address = x.address();             // obtain address
+        MemoryAddress ptr;
 
         // ptr = &x;
-        MemoryAddress ptr = address;
+        ptr = x.address();
+
         //MemorySegment ptrVal = MemorySegment.ofAddress(ptr, 8, scope);
         // Output value: x = 5 and ptr's value = 5
         System.out.printf("           x = %d    address = %x %n", x.get(JAVA_INT, 0), x.address().toRawLongValue());
         System.out.printf(" ptr's value = %d    address = %x %n", ptr.get(JAVA_INT, 0), ptr.address().toRawLongValue());
 //        System.out.printf(" ptr's value = %d    address = %x %n", ptrVal.get(C_INT, 0), ptrVal.address().toRawLongValue());
 
-         // Change x = 10;
-        x.set(JAVA_INT, 0, 10);
+        // Change x = 10 through ptr
+        ptr.set(JAVA_INT, 0, 10);
         System.out.printf(" Changing x's value to: %d %n", x.get(JAVA_INT, 0));
 
         // Output after change
