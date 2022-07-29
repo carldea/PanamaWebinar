@@ -1,3 +1,5 @@
+import org.mylib.Point;
+
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -27,6 +29,13 @@ public class PanamaCallback {
         printf(cString);
     }
 
+    public final static MemorySegment lookup(String symbolName) {
+        Linker linker = Linker.nativeLinker();
+        return linker.defaultLookup()
+                .lookup(symbolName)
+                .or(() -> SymbolLookup.loaderLookup().lookup(symbolName))
+                .orElseThrow(() -> new RuntimeException("The symbol %s is not found".formatted(symbolName)));
+    }
     /**
      * Main entry point.
      * @param args
@@ -42,57 +51,70 @@ public class PanamaCallback {
             fflush(NULL());
             Linker linker = Linker.nativeLinker();
 
-            // my_callback_function C function receives a callback (pointer to a function)
-            MemorySegment callback1 = SymbolLookup.loaderLookup().lookup("my_callback_function")
-                    .or(() -> linker.defaultLookup().lookup("my_callback_function"))
-                    .orElseThrow(() -> new RuntimeException("cant find symbol"));
-            var my_callback_functionMethodHandle = linker.downcallHandle(
-                    callback1,
-                    FunctionDescriptor.ofVoid(C_POINTER)
-            );
-
-            // my_callback_function2 C function receives a callback (pointer to a function)
-            MemorySegment callback2 = SymbolLookup.loaderLookup().lookup("my_callback_function2")
-                    .or(() -> linker.defaultLookup().lookup("my_callback_function2"))
-                    .orElseThrow(() -> new RuntimeException("cant find symbol"));
-            var my_callback_function2MethodHandle = linker.downcallHandle(
-                    callback2,
-                    FunctionDescriptor.ofVoid(C_POINTER, C_INT)
-            );
-
-            // Create a method handle to the Java function as a callback
+            // Step 1: Create method handle for the static method
             MethodHandle onCallMePlease = MethodHandles.lookup()
                     .findStatic(PanamaCallback.class,
                             "callMePlease",
                             MethodType.methodType(void.class));
 
-            // Create a stub as a native symbol to be passed into native function.
+            // Step 2: Create a stub as a native symbol to be passed into native function.
             // void (*ptr)()
             MemorySegment callMePleaseNativeSymbol = linker.upcallStub(
                     onCallMePlease,
                     FunctionDescriptor.ofVoid(),
                     memorySession);
 
-            // Invoke C function receiving a callback
+            // Step 3: Create method handle to native callback function (my_callback_function)
+            MemorySegment callback1 = lookup("my_callback_function");
+            var my_callback_functionMethodHandle = linker.downcallHandle(
+                    callback1,
+                    FunctionDescriptor.ofVoid(C_POINTER)
+            );
+
+            // Step 4: Invoke native callback function receiving a function pointer.
             // void my_callback_function(void (*ptr)())
             my_callback_functionMethodHandle.invoke(callMePleaseNativeSymbol);
 
-            // Create a method handle to the Java function as a callback
+
+            // Another example with a different function signiture.
+            // Step 1: Create a method handle to the Java function as a callback
             MethodHandle onDoubleMe = MethodHandles.lookup()
                     .findStatic(PanamaCallback.class,
                             "doubleMe",
                             MethodType.methodType(void.class, int.class));
 
-            // Create a stub as a native symbol to be passed into native function.
+            //  Step 2: Create a stub as a native symbol to be passed into native function.
             // void (*ptr)(int)
             MemorySegment doubleMeNativeSymbol = Linker.nativeLinker().upcallStub(
                     onDoubleMe,
                     FunctionDescriptor.ofVoid(C_INT),
                     memorySession);
 
-            // Invoke C function receiving a callback
+            //  Step 3: Invoke C function receiving a callback from jextract method.
             // void my_callback_function2(void (*ptr)(int))
             my_callback_function2(doubleMeNativeSymbol);
+
+            ///////////////////
+            // Another example to mimic a function pointer that returns an int and passes in a struct
+            MethodHandle addCoordinatesMH = MethodHandles.lookup()
+                    .findStatic(PanamaCallback.class,
+                            "addCoordinates",
+                            MethodType.methodType(int.class, MemorySegment.class));
+            MemorySegment addCoordinatesNativeSymbol = Linker.nativeLinker().upcallStub(
+                    addCoordinatesMH,
+                    FunctionDescriptor.of(C_INT, Point.$LAYOUT()),
+                    memorySession);
+
+            my_callback_function3(addCoordinatesNativeSymbol);
+        }
+    }
+
+    public static int addCoordinates(MemorySegment ptStruct) {
+        try (var memorySession= MemorySession.openConfined()) {
+            int x = Point.x$get(ptStruct);
+            int y = Point.y$get(ptStruct);
+            printf(memorySession.allocateUtf8String(">>> pt.x + pt.y = %d \n"), (x+y));
+            return (x+y);
         }
     }
 }

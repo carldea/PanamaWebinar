@@ -9,6 +9,13 @@ A three part webinar series:
 # Instructions
 **Important:** This Webinar now **requires** the `jextract` tool. Because jextract is a separate tool (not part of the standard OpenJDK download) you will need to [download](https://jdk.java.net/jextract/) the pre built binaries for your specific platform OS. 
 
+If you are using macOS Catalina or later you may need to remove the quarantine attribute from the bits before you can use the jextract binaries.
+
+To do this, run the following:
+```shell
+$ sudo xattr -r -d com.apple.quarantine path/to/jextract/folder/
+```
+
 **Note:** For arm64 MacOS you'll need to build the `jextract` tool yourself ([instructions](https://foojay.io/today/building-project-panamas-jextract-tool-by-yourself/)). 
 
 
