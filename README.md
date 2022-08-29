@@ -4,7 +4,7 @@ This webinar is a workshop as an introduction to OpenJDK's Project Panama. Mainl
 A three part webinar series:
 - Project Panama: [What’s it All About](https://www.azul.com/resources-hub/webinars-2/project-panama-what-it-s-all-about)  
 - Project Panama: [Seeing it in Action](https://www.azul.com/resources-hub/webinars-2/project-panama-webinar-seeing-it-in-action-americas)
-- Project Panama: A Deeper Dive
+- Project Panama: [A Deeper Dive](https://www.azul.com/webinar-project-panama-3/)
 
 # Instructions
 **Important:** This Webinar now **requires** the `jextract` tool. Because jextract is a separate tool (not part of the standard OpenJDK download) you will need to [download](https://jdk.java.net/jextract/) the pre built binaries for your specific platform OS. 
